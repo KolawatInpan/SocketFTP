@@ -1,18 +1,20 @@
-<h1>Command</h1>
+## Commands
+
 | Command | Status |
-| ------- | ------ |
-| REPL | <span style="color:red">&#10003;</span> |
-
-## Plugins
-
-Dillinger is currently extended with the following plugins.
-Instructions on how to use them in your own application are linked below.
-
-| Plugin | README |
 | ------ | ------ |
 | REPL | <span style="color:red">&#10003;</span> |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+| ascii | <span style="color:red">&#10003;</span> |
+| binary | <span style="color:red">&#10003;</span> |
+| bye | <span style="color:red">&#10003;</span> |
+| cd | <span style="color:red">&#10003;</span> |
+| close | <span style="color:red">&#10003;</span> |
+| delete | <span style="color:red">&#10003;</span> |
+| disconnect | <span style="color:red">&#10003;</span> |
+| get | <span style="color:red">&#10003;</span> |
+| ls | <span style="color:red">&#10003;</span> |
+| open | <span style="color:red">&#10003;</span> |
+| put | <span style="color:red">&#10003;</span> |
+| pwd | <span style="color:red">&#10003;</span> |
+| quit | <span style="color:red">&#10003;</span> |
+| rename | <span style="color:red">&#10003;</span> |
+| user | <span style="color:red">&#10003;</span> |
