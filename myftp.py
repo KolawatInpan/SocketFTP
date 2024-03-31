@@ -7,6 +7,7 @@ from getpass import getpass
 class Client:
     def __init__(self):
         self.client_socket = None
+        self.local_dir = os.getcwd()
 
     def is_connected(self):
         return self.client_socket is not None
@@ -150,7 +151,6 @@ class Client:
                 self.client_socket.sendall(data)
         print(f"local: {local_file} remote: {remote_file}")
 
-
 client = Client()
 
 while True:
@@ -193,8 +193,10 @@ while True:
             client.send_ftp("LIST")
 
         elif command == "put":
-            client.put(args[1] if len(args) > 1 else None,
-                       args[2] if len(args) > 2 else None)
+            if len(args) > 1:
+                client.put(*args[1:])
+            else:
+                client.put()
 
         elif command == "pwd":
             client.pwd()
@@ -203,10 +205,11 @@ while True:
             client.mkdir(args[1] if len(args) > 1 else None)
 
         elif command == "lcd":
-            if len(args) == 1:
-                print(client.local_dir)
+            if len(args) > 1:
+                os.chdir(args[1])
             else:
-                client.local_dir = args[1]
+                os.chdir(client.local_dir)
+            print(os.getcwd())
 
         elif command == "rename":
             if len(args) > 2:
