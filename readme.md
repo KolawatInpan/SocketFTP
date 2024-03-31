@@ -2,7 +2,7 @@
 
 | Command | Status |
 | ------ | ------ |
-| REPL | <h3 style="color:green;">Completed</h3> |
+| REPL | <span style="color: green"> Completed </span> |
 | ascii | <span>&#10003;</span> |
 | binary | <span>&#10003;</span> |
 | bye | <span>&#10003;</span> |
