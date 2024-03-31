@@ -2,19 +2,19 @@
 
 | Command | Status |
 | ------ | ------ |
-| REPL | <span style="color: green"> Completed </span> |
-| ascii | <span>&#10003;</span> |
-| binary | <span>&#10003;</span> |
-| bye | <span>&#10003;</span> |
-| cd | <span>&#10003;</span> |
-| close | <span>&#10003;</span> |
-| delete | <span>&#10003;</span> |
-| disconnect | <span>&#10003;</span> |
-| get | <span>&#10003;</span> |
-| ls | <span>&#10003;</span> |
-| open | <span>&#10003;</span> |
-| put | <span>&#10003;</span> |
-| pwd | <span>&#10003;</span> |
-| quit | <span>&#10003;</span> |
-| rename | <span>&#10003;</span> |
-| user | <span>&#10003;</span> |
+| REPL | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| ascii | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| binary | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| bye | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| cd | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| close | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| delete | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| disconnect | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| get | ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) |
+| ls | ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) |
+| open | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| put | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| pwd | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| quit | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| rename | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| user | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
