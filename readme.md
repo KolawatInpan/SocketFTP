@@ -1,7 +1,7 @@
 <h1>Command</h1>
 | Command | Status |
 | ------- | ------ |
-| REPL | <span>&#10003;</span> |
+| REPL | <span style="color:red">&#10003;</span> |
 
 ## Plugins
 
@@ -10,7 +10,7 @@ Instructions on how to use them in your own application are linked below.
 
 | Plugin | README |
 | ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
+| REPL | <span style="color:red">&#10003;</span> |
 | GitHub | [plugins/github/README.md][PlGh] |
 | Google Drive | [plugins/googledrive/README.md][PlGd] |
 | OneDrive | [plugins/onedrive/README.md][PlOd] |
