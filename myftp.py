@@ -1,6 +1,7 @@
 import socket
 import os
 import random
+import time
 from getpass import getpass
 
 
@@ -110,7 +111,7 @@ class Client:
             self.send_ftp(f"DELE {remote_file}")
         else:
             print("Not connected.")
-    
+
     def mkdir(self, path):
         if self.is_connected():
             if not path:
@@ -131,25 +132,152 @@ class Client:
         else:
             print("Not connected.")
 
+    def ls(self, local_file=None, remote_file=None):
+        if not self.is_connected():
+            print("Not connected.")
+            return
+        data_port = random.randint(1024, 65535)
+        local_ip = self.client_socket.getsockname()[0]
+        port_command = f"PORT {','.join(local_ip.split('.'))},{
+            data_port//256},{data_port % 256}"
+        resp = self.send_ftp(port_command)
+
+        if resp.startswith("200"):
+            try:
+                data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                data_socket.settimeout(10)
+                data_socket.bind((local_ip, data_port))
+                data_socket.listen(1)
+
+                if local_file is not None:
+                    write_to = os.path.join(os.getcwd(), local_file)
+                    try:
+                        with open(write_to, 'w'):
+                            pass
+                    except IOError:
+                        data_socket.close()
+                        raise Exception(f"Error opening local file {local_file}.\n> {
+                                        local_file[0]}:No Such file or directory")
+
+                resp = self.send_ftp(
+                    f'NLST {remote_file}' if remote_file is not None else 'NLST')
+                if resp.startswith('5'):
+                    data_socket.close()
+                    return
+                if resp.startswith('1'):
+                    data_conn, _ = data_socket.accept()
+                    bytes_recv = 0
+                    start_time = time.time()
+
+                    while True:
+                        data = data_conn.recv(1024)
+                        if not data:
+                            break
+
+                        if local_file is None:
+                            print(data.decode(), end="")
+                        else:
+                            with open(local_file, 'wb') as f:
+                                f.write(data)
+                                print(150)
+
+                        bytes_recv += len(data)
+
+                    end_time = time.time()
+                    transfer_time = end_time - start_time
+                    transfer_speed = (bytes_recv/1000) / (transfer_time + 1e-6)
+                    data_conn.close()
+                data_socket.close()
+                print(self.client_socket.recv(1024).decode(), end="")
+                print(f"ftp: {bytes_recv} bytes sent in {
+                      transfer_time:.2f}Seconds {transfer_speed:.2f}KBytes/sec.")
+
+            except socket.timeout:
+                print('> ftp: connect :Connection timed out')
+                return
+            except Exception as e:
+                print(e)
+                return
+
+    def get(self, remote_file=None, local_file=None):
+        if not self.is_connected():
+            print("Not connected.")
+            return
+        if remote_file is None:
+            remote_file = input("Remote file ")
+            local_file = input("Local file ")
+        if local_file is None:
+            local_file = remote_file
+        elif local_file.strip() == "":
+            local_file = remote_file
+
+        data_port = random.randint(1024, 65535)
+        local_ip = self.client_socket.getsockname()[0]
+        port_command = f"PORT {','.join(local_ip.split('.'))},{
+            data_port//256},{data_port % 256}"
+
+        resp = self.send_ftp(port_command)
+
+        if resp.startswith("200"):
+            try:
+                data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                data_socket.settimeout(10)
+                data_socket.bind((local_ip, data_port))
+                data_socket.listen(1)
+
+                resp = self.send_ftp(f'RETR {remote_file}')
+                if resp.startswith('5'):
+                    data_socket.close()
+                    return
+
+                write_to = os.path.join(os.getcwd(), local_file)
+                can_write = 1
+                try:
+                    with open(write_to, 'wb'):
+                        pass
+                except:
+                    can_write = 0
+                    print("> R:No such process")
+
+                if resp.startswith('1') and can_write:
+                    data_conn, _ = data_socket.accept()
+                    bytes_recv = 0
+                    start_time = time.time()
+
+                    while True:
+                        data = data_conn.recv(1024)
+                        if not data:
+                            break
+
+                        if can_write:
+                            with open(local_file, 'ab') as f:
+                                f.write(data)
+                        bytes_recv += len(data)
+
+                    end_time = time.time()
+                    transfer_time = end_time - start_time
+                    transfer_speed = (bytes_recv/1000) / (transfer_time + 1e-6)
+                    data_conn.close()
+                data_socket.close()
+                print(self.client_socket.recv(1024).decode(), end="")
+                print(f"ftp: {bytes_recv} bytes sent in {transfer_time:.2f}Seconds {transfer_speed:.2f}KBytes/sec.")
+            except socket.timeout:
+                print('> ftp: connect :Connection timed out')
+                return
+            except Exception as e:
+                print(e)
+                return
+
     def put(self, local_file=None, remote_file=None):
         if not self.is_connected():
             print("Not connected.")
             return
         if local_file is None:
             local_file = input("Local file ")
-        if not os.path.exists(local_file):
-            print(f"local: {local_file}: No such file or directory.")
-            return
-        if remote_file is None:
             remote_file = input("Remote file ")
-        with open(local_file, "rb") as f:
-            self.send_ftp(f"STOR {remote_file}")
-            while True:
-                data = f.read(1024)
-                if not data:
-                    break
-                self.client_socket.sendall(data)
-        print(f"local: {local_file} remote: {remote_file}")
+        elif remote_file is None:
+            remote_file = local_file
+
 
 client = Client()
 
@@ -188,9 +316,18 @@ while True:
 
         elif command == "delete":
             client.delete(args[1] if len(args) > 1 else None)
-        
+
+        elif command == "get":
+            if len(args) > 1:
+                client.get(*args[1:])
+            else:
+                client.get()
+
         elif command == "ls":
-            client.send_ftp("LIST")
+            if len(args) > 1:
+                client.ls(*args[1:])
+            else:
+                client.ls()
 
         elif command == "put":
             if len(args) > 1:
@@ -212,7 +349,7 @@ while True:
             print(os.getcwd())
 
         elif command == "rename":
-            if len(args) > 2:
+            if len(args) > 1:
                 client.rename(*args[1:])
             else:
                 client.rename()
