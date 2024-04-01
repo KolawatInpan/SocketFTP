@@ -10,11 +10,13 @@
 | close | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | delete | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | disconnect | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
-| get | ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) |
-| ls | ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) |
+| get | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+| ls | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | open | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | put | ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) |
 | pwd | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | quit | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | rename | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
 | user | ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) |
+
+ของ Windows 11 หลังใส่ password จะมีการเว้นบรรทัด 1 ครั้ง ส่วน windows 10 จะไม่มีการเว้น
