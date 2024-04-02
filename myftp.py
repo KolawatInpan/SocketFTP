@@ -156,8 +156,7 @@ class Client:
                             pass
                     except IOError:
                         data_socket.close()
-                        raise Exception(f"Error opening local file {local_file}.\n> {
-                                        local_file[0]}:No Such file or directory")
+                        raise Exception(f"Error opening local file {local_file}.\n> {local_file[0]}:No Such file or directory")
 
                 resp = self.send_ftp(
                     f'NLST {remote_file}' if remote_file is not None else 'NLST')
@@ -189,8 +188,7 @@ class Client:
                     data_conn.close()
                 data_socket.close()
                 print(self.client_socket.recv(1024).decode(), end="")
-                print(f"ftp: {bytes_recv} bytes sent in {
-                      transfer_time:.2f}Seconds {transfer_speed:.2f}KBytes/sec.")
+                print(f"ftp: {bytes_recv} bytes sent in {transfer_time:.2f}Seconds {transfer_speed:.2f}KBytes/sec.")
 
             except socket.timeout:
                 print('> ftp: connect :Connection timed out')
@@ -199,7 +197,7 @@ class Client:
                 print(e)
                 return
 
-    def get(self, remote_file=None, local_file=None):
+    def get(self, remote_file=None, local_file=None): ## remote to local
         if not self.is_connected():
             print("Not connected.")
             return
@@ -268,15 +266,71 @@ class Client:
                 print(e)
                 return
 
-    def put(self, local_file=None, remote_file=None):
+    def put(self, local_file=None, remote_file=None): ## local to remote
         if not self.is_connected():
             print("Not connected.")
             return
         if local_file is None:
             local_file = input("Local file ")
             remote_file = input("Remote file ")
-        elif remote_file is None:
+        if remote_file is None:
             remote_file = local_file
+        elif remote_file.strip() == "":
+            remote_file = local_file
+        
+        data_port = random.randint(1024, 65535)
+        local_ip = self.client_socket.getsockname()[0]
+        port_command = f"PORT {','.join(local_ip.split('.'))},{
+            data_port//256},{data_port % 256}"
+        resp = self.send_ftp(port_command)
+        
+        if resp.startswith("200"):
+            try:
+                data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                data_socket.settimeout(10)
+                data_socket.bind((local_ip, data_port))
+                data_socket.listen(1)
+
+                resp = self.send_ftp(f'STOR {remote_file}')
+                if resp.startswith('5'):
+                    data_socket.close()
+                    return
+
+                read_from = os.path.join(os.getcwd(), local_file)
+                can_read = 1
+                try:
+                    with open(read_from, 'rb'):
+                        pass
+                except:
+                    can_read = 0
+                    print("> R:No such process")
+
+                if resp.startswith('1') and can_read:
+                    data_conn, _ = data_socket.accept()
+                    bytes_sent = 0
+                    start_time = time.time()
+
+                    with open(local_file, 'rb') as f:
+                        while True:
+                            data = f.read(1024)
+                            if not data:
+                                break
+                            data_conn.sendall(data)
+                            bytes_sent += len(data)
+
+                    end_time = time.time()
+                    transfer_time = end_time - start_time
+                    transfer_speed = (bytes_sent/1000) / (transfer_time + 1e-6)
+                    data_conn.close()
+                data_socket.close()
+                print(self.client_socket.recv(1024).decode(), end="")
+                print(f"ftp: {bytes_sent} bytes sent in {transfer_time:.2f}Seconds {transfer_speed:.2f}KBytes/sec.")
+            except socket.timeout:
+                print('> ftp: connect :Connection timed out')
+                return
+            except Exception as e:
+                print(e)
+                return
 
 
 client = Client()
